@@ -184,16 +184,17 @@ button { font-family: var(--mono); cursor: pointer; }
 .cmd-comment { color: var(--comment); font-size: 14px; margin-bottom: 6px; }
 .cmd-line {
   font-size: 17px; font-weight: 500; color: var(--text);
-  white-space: nowrap; overflow-x: auto; overflow-y: hidden;
-  scrollbar-width: thin; scrollbar-color: var(--edge-2) transparent; padding-bottom: 6px;
+  white-space: pre-wrap; word-break: break-all; line-height: 1.55;
 }
-.cmd-line::-webkit-scrollbar { height: 6px; }
-.cmd-line::-webkit-scrollbar-thumb { background: var(--edge-2); }
 .cmd-line .prompt { color: var(--green); margin-right: 8px; user-select: none; }
 .cmd-line.overflow {
+  white-space: nowrap; overflow-x: auto; overflow-y: hidden; word-break: normal;
+  scrollbar-width: thin; scrollbar-color: var(--edge-2) transparent; padding-bottom: 6px;
   -webkit-mask-image: linear-gradient(to right, #000 88%, rgba(0,0,0,0.25) 99%);
           mask-image: linear-gradient(to right, #000 88%, rgba(0,0,0,0.25) 99%);
 }
+.cmd-line.overflow::-webkit-scrollbar { height: 6px; }
+.cmd-line.overflow::-webkit-scrollbar-thumb { background: var(--edge-2); }
 .overflow-hint { font-size: 10.5px; color: var(--muted); letter-spacing: 0.12em; margin-top: -8px; margin-bottom: 14px; text-align: right; }
 .term-proceed { font-size: 14px; color: var(--text-dim); margin-bottom: 14px; }
 
