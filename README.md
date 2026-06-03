@@ -4,6 +4,8 @@
 
 A reflex game that teaches developers the danger of blindly approving AI agent suggestions. You're shown shell commands one at a time — approve the safe ones, deny the traps — before the timer runs out.
 
+**Play it: [just-one-command.vercel.app](https://just-one-command.vercel.app/)**
+
 ---
 
 ## What is this?
