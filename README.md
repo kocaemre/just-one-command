@@ -1,25 +1,67 @@
-# CODING AGENTS: READ THIS FIRST
+# just-one-command
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+> *"It's just one command. What could go wrong?"*
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+A reflex game that teaches developers the danger of blindly approving AI agent suggestions. You're shown shell commands one at a time — approve the safe ones, deny the traps — before the timer runs out.
 
-## What you should do — IMPORTANT
+---
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+## What is this?
 
-**Read `project/continue/Continue.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+AI coding agents like Claude Code, Cursor, and Copilot Workspace suggest shell commands that need your approval. In practice, most developers glance at the command and click yes — especially when they're context-switching, in a meeting, or just tired.
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+This game simulates that exact moment. Each round looks like a real agent approval prompt. Some commands are safe. Some will wipe your home directory, exfiltrate your `.env`, or install a persistent backdoor — dressed up as routine maintenance.
 
-## About the design files
+The punchline: **you'd actually click approve on some of these.**
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+---
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+## How to play
 
-## Bundle contents
+- Read the command and the agent's explanation
+- Press **1** to approve or **2** to deny (keyboard-first)
+- On mobile: large tap targets for both choices
+- You have **5.5 seconds** per command
+- 10 rounds, shuffled every session
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `continue` project files (HTML prototypes, assets, components)
+After each round you see what the command actually did. After all 10, you get a shareable score card.
+
+---
+
+## Commands in the game
+
+The game includes a mix of genuinely safe commands and traps at different difficulty levels:
+
+| Tier | Examples |
+|------|---------|
+| LOW | `git log`, `npm audit fix`, `npx prettier --write src/` |
+| MEDIUM | `git push --force origin main` |
+| CRITICAL | env exfiltration via curl pipe, npm registry poisoning, cron backdoor, hidden payload past the scroll edge |
+
+The hardest ones look completely routine. That's the point.
+
+---
+
+## Stack
+
+- **Next.js 16** (App Router)
+- **TypeScript**
+- No UI library — pure CSS with custom properties
+- CRT scanline + grain aesthetic, rAF-driven timer
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+---
+
+## The lesson
+
+Read the full command. Not just the comment. Not just the first token. The whole line — including what's past the scroll edge.
+
+The agent's narration is designed to sound trustworthy. The comment can lie. The dangerous part is usually at the end.
