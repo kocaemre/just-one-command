@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ROUNDS, shuffle, type Round } from "@/lib/game-data";
 import TimerBar from "./TimerBar";
 
-const ROUND_MS = 8000;
+const ROUND_MS = 13000;
 
 type Phase = "title" | "play" | "reveal" | "score";
 type Decision = "approve" | "deny" | "timeout";
@@ -106,7 +106,7 @@ function TitleScreen({ onStart }: { onStart: () => void }) {
       <div style={{ display: "flex", justifyContent: "center", gap: 22, color: "var(--muted)", fontSize: 12, letterSpacing: "0.1em" }}>
         <span><b style={{ color: "var(--green)" }}>1</b> APPROVE</span>
         <span><b style={{ color: "var(--red)" }}>2</b> DENY</span>
-        <span>10 COMMANDS · 8s EACH</span>
+        <span>10 COMMANDS · 13s EACH</span>
       </div>
     </div>
   );
@@ -350,7 +350,7 @@ export default function Game() {
       `CONTINUE? — I scored ${score}/${ROUNDS.length} approving AI agent commands.`,
       owned > 0 ? `Got owned ${owned}×.` : `Didn't get owned once.`,
       sneaky ? `Sneakiest one I missed: > ${sneaky.command}` : null,
-      `Think you'd catch them? ${window.location.href}`,
+      `Think you'd catch them? https://just-one-command.vercel.app/`,
     ].filter(Boolean) as string[];
     const done = () => { setShared(true); setTimeout(() => setShared(false), 2000); };
     navigator.clipboard?.writeText(lines.join("\n")).then(done).catch(done) ?? done();
