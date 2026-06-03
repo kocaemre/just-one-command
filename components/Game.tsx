@@ -236,10 +236,33 @@ function RevealCard({ item, decision, correct, onNext, index, total, results }: 
 }
 
 /* ---- Score card ---- */
-function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay, onShare, shared }: {
+function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay }: {
   score: number; total: number; owned: number; sneakiest: Round | null;
-  verdict: string; onReplay: () => void; onShare: () => void; shared: boolean;
+  verdict: string; onReplay: () => void;
 }) {
+  const [shareOpen, setShareOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const shareText = [
+    `CONTINUE? — I scored ${score}/${total} approving AI agent commands.`,
+    owned > 0 ? `Got owned ${owned}×.` : `Didn't get owned once.`,
+    sneakiest ? `Sneakiest one I missed: > ${sneakiest.command}` : null,
+    `Think you'd catch them? https://just-one-command.vercel.app/`,
+  ].filter(Boolean).join("\n");
+
+  const url = "https://just-one-command.vercel.app/";
+  const tweetText = encodeURIComponent(
+    `I scored ${score}/${total} approving AI agent shell commands — got owned ${owned}×.\n\nThink you'd catch the traps?\n`
+  );
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(url)}`;
+
+  const copyText = () => {
+    navigator.clipboard?.writeText(shareText).then(() => {
+      setCopied(true); setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <div className="frame fade-up">
       <div className="scorecard">
@@ -270,9 +293,28 @@ function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay, onShare,
         )}
       </div>
 
-      <div className="sc-actions" style={{ marginTop: 14 }}>
-        <button className="btn btn-ghost" onClick={onShare}>{shared ? "COPIED ✓" : "SHARE"}</button>
-        <button className="btn btn-primary" onClick={onReplay}>PLAY AGAIN</button>
+      <div style={{ position: "relative", marginTop: 14 }}>
+        {shareOpen && (
+          <div className="share-menu">
+            <a className="share-item" href={twitterUrl} target="_blank" rel="noopener noreferrer"
+               onClick={() => setShareOpen(false)}>
+              <span className="share-icon">𝕏</span> Post on X / Twitter
+            </a>
+            <a className="share-item" href={linkedInUrl} target="_blank" rel="noopener noreferrer"
+               onClick={() => setShareOpen(false)}>
+              <span className="share-icon">in</span> Share on LinkedIn
+            </a>
+            <button className="share-item" onClick={() => { copyText(); setShareOpen(false); }}>
+              <span className="share-icon">#</span> {copied ? "Copied ✓" : "Copy text"}
+            </button>
+          </div>
+        )}
+        <div className="sc-actions">
+          <button className="btn btn-ghost" onClick={() => setShareOpen((o) => !o)}>
+            {shareOpen ? "CLOSE ✕" : "SHARE ↑"}
+          </button>
+          <button className="btn btn-primary" onClick={onReplay}>PLAY AGAIN</button>
+        </div>
       </div>
     </div>
   );
@@ -289,7 +331,6 @@ export default function Game() {
   const [missed, setMissed] = useState<Round[]>([]);
   const [last, setLast] = useState<{ decision: Decision; correct: boolean } | null>(null);
   const [flash, setFlash] = useState(0);
-  const [shared, setShared] = useState(false);
 
   const lockRef = useRef(false);
   const item = deck[index];
@@ -328,7 +369,7 @@ export default function Game() {
   const start = useCallback(() => {
     setDeck(shuffle(ROUNDS));
     setIndex(0); setResults([]); setScore(0); setOwned(0);
-    setMissed([]); setLast(null); setShared(false);
+    setMissed([]); setLast(null);
     setPhase("play");
   }, []);
 
@@ -343,18 +384,6 @@ export default function Game() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, resolve, next, start]);
-
-  const share = useCallback(() => {
-    const sneaky = [...missed].sort((a, b) => b.sneaky - a.sneaky)[0];
-    const lines = [
-      `CONTINUE? — I scored ${score}/${ROUNDS.length} approving AI agent commands.`,
-      owned > 0 ? `Got owned ${owned}×.` : `Didn't get owned once.`,
-      sneaky ? `Sneakiest one I missed: > ${sneaky.command}` : null,
-      `Think you'd catch them? https://just-one-command.vercel.app/`,
-    ].filter(Boolean) as string[];
-    const done = () => { setShared(true); setTimeout(() => setShared(false), 2000); };
-    navigator.clipboard?.writeText(lines.join("\n")).then(done).catch(done) ?? done();
-  }, [score, owned, missed]);
 
   const sneakiest = [...missed].sort((a, b) => b.sneaky - a.sneaky)[0] ?? null;
 
@@ -396,8 +425,6 @@ export default function Game() {
           sneakiest={sneakiest}
           verdict={computeVerdict(score, ROUNDS.length, owned)}
           onReplay={start}
-          onShare={share}
-          shared={shared}
         />
       )}
     </div>
