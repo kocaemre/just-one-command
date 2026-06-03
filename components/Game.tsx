@@ -263,6 +263,14 @@ function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay }: {
     });
   };
 
+  const shareLinkedIn = () => {
+    navigator.clipboard?.writeText(shareText);
+    window.open(linkedInUrl, "_blank", "noopener,noreferrer");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 4000);
+    setShareOpen(false);
+  };
+
   return (
     <div className="frame fade-up">
       <div className="scorecard">
@@ -300,10 +308,10 @@ function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay }: {
                onClick={() => setShareOpen(false)}>
               <span className="share-icon">𝕏</span> Post on X / Twitter
             </a>
-            <a className="share-item" href={linkedInUrl} target="_blank" rel="noopener noreferrer"
-               onClick={() => setShareOpen(false)}>
+            <button className="share-item" onClick={shareLinkedIn}>
               <span className="share-icon">in</span> Share on LinkedIn
-            </a>
+              <span style={{ marginLeft: "auto", fontSize: 10, color: "var(--muted)", letterSpacing: "0.1em" }}>TEXT COPIED</span>
+            </button>
             <button className="share-item" onClick={() => { copyText(); setShareOpen(false); }}>
               <span className="share-icon">#</span> {copied ? "Copied ✓" : "Copy text"}
             </button>
@@ -311,7 +319,7 @@ function ScoreCard({ score, total, owned, sneakiest, verdict, onReplay }: {
         )}
         <div className="sc-actions">
           <button className="btn btn-ghost" onClick={() => setShareOpen((o) => !o)}>
-            {shareOpen ? "CLOSE ✕" : "SHARE ↑"}
+            {copied ? "COPIED ✓" : shareOpen ? "CLOSE ✕" : "SHARE ↑"}
           </button>
           <button className="btn btn-primary" onClick={onReplay}>PLAY AGAIN</button>
         </div>
