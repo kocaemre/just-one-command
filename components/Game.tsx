@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ROUNDS, shuffle, type Round } from "@/lib/game-data";
 import TimerBar from "./TimerBar";
 
-const ROUND_MS = 5500;
+const ROUND_MS = 8000;
 
 type Phase = "title" | "play" | "reveal" | "score";
 type Decision = "approve" | "deny" | "timeout";
@@ -106,7 +106,7 @@ function TitleScreen({ onStart }: { onStart: () => void }) {
       <div style={{ display: "flex", justifyContent: "center", gap: 22, color: "var(--muted)", fontSize: 12, letterSpacing: "0.1em" }}>
         <span><b style={{ color: "var(--green)" }}>1</b> APPROVE</span>
         <span><b style={{ color: "var(--red)" }}>2</b> DENY</span>
-        <span>10 COMMANDS · 5.5s EACH</span>
+        <span>10 COMMANDS · 8s EACH</span>
       </div>
     </div>
   );
