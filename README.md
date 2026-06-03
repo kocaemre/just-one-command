@@ -1,5 +1,9 @@
 # just-one-command
 
+
+<img width="800" height="429" alt="ezgif com-optimize" src="https://github.com/user-attachments/assets/c7b42c89-519c-4203-9e44-5b5546bc9abd" />
+
+
 > *"It's just one command. What could go wrong?"*
 
 A reflex game that teaches developers the danger of blindly approving AI agent suggestions. You're shown shell commands one at a time — approve the safe ones, deny the traps — before the timer runs out.
